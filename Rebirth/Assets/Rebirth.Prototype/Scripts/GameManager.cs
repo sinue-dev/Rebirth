@@ -102,6 +102,16 @@ namespace Rebirth.Prototype
                 return Input.GetKey(keyJump);
             }
 
+			public float MoveHorizontal()
+			{
+				return Input.GetAxis("Horizontal");
+			}
+
+			public float MoveVertical()
+			{
+				return Input.GetAxis("Vertical");
+			}
+
             public bool Forward()
             {
                 return Input.GetKey(keyForward);
@@ -121,6 +131,16 @@ namespace Rebirth.Prototype
             {
                 return Input.GetKey(keyRight);
             }
+
+			public bool AttackLeft()
+			{
+				return Input.GetMouseButtonDown(0);
+			}
+
+			public bool AttackRight()
+			{
+				return Input.GetMouseButtonDown(1);
+			}
 
             public KeyCode keyForward { get; set; }
             public KeyCode keyBackward { get; set; }

@@ -17,7 +17,7 @@ namespace Rebirth.Prototype
 
         public void SettingsOnClick()
         {
-
+			
         }
 
         public void QuitOnClick()

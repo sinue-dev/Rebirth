@@ -42,63 +42,22 @@ namespace Rebirth.Prototype
 
     public class RebirthPlayerController : Entity
     {
-        private CharacterController controller;
-        public CharacterController Controller
+        private CharacterControllerCustom controller;
+        public CharacterControllerCustom Controller
         {
             get { return controller; }
         }
 
         #region Unity Methods
 
-        protected override void UpdateClient()
+        protected override void UpdateClient() // wird in Entity in Update() ausgeführt
         {
-            controller.UpdateClient();
-
-            if(!controller.isDead)
-            {
-                if (InteractableItem != null && PlayerInput.GetInteract())
-                {
-                    InteractableItem.OnInteract();
-
-                    if (InteractableItem is ItemBase)
-                    {
-                        GameManager.singleton.Hud.Bag.AddItem(InteractableItem as ItemBase);
-                        (InteractableItem as ItemBase).OnPickup();
-                    }
-
-                    GameManager.singleton.Hud.CloseMessagePanel();
-
-                    InteractableItem = null;
-                }
-
-                if (LeftHandItem != null && Input.GetMouseButtonDown(0))
-                {
-                    if (!EventSystem.current.IsPointerOverGameObject())
-                    {
-                        LeftHandItem.ItemAction();
-                    }
-                }
-                if (RightHandItem != null && Input.GetMouseButtonDown(1))
-                {
-                    if (!EventSystem.current.IsPointerOverGameObject())
-                    {
-                        RightHandItem.ItemAction();
-                    }
-                }
-            }
+            controller.UpdateClient();            
         }
 
         void FixedUpdate()
         {
-            controller.FixedUpdateClient();
-
-            if(!controller.isDead)
-            {
-                if (LeftHandItem != null && Input.GetKeyDown(KeyCode.G))
-                {
-                    DropCurrentItem();
-                }
-            }
+            controller.FixedUpdateClient();            
         }
 
         void LateUpdate()
@@ -116,7 +75,7 @@ namespace Rebirth.Prototype
             GameManager.singleton.WorldCamera.gameObject.SetActive(true);
             GameManager.singleton.WorldCamera.GetComponent<CameraController>().target = transform;
 
-            controller = GetComponent<CharacterController>();
+            controller = GetComponent<CharacterControllerCustom>();
 
             GameManager.singleton.Hud.UIActionPanel.Show();
             GameManager.singleton.Hud.UIBagPanel.Show();

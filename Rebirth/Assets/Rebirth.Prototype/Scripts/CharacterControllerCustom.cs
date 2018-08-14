@@ -2,9 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Rebirth.Prototype
 {
+	public enum Hands_e
+	{
+		BOTH = 0,
+		LEFT = 1,
+		RIGHT = 2
+	}
+
     public enum Weapons_e
     {
         HAND = 0,
@@ -39,7 +47,9 @@ namespace Rebirth.Prototype
         public float MovementSpeed = 2f;
 	    public float TurnSpeed = 1f;
         float rotationSpeed = 40f;
-        public bool isBlocking = false;
+
+		public bool isDead = false;
+		public bool isBlocking = false;
 
         public bool IsWalking
         {
@@ -85,7 +95,7 @@ namespace Rebirth.Prototype
         }
 
 
-        void Update()
+        public virtual void UpdateClient()
         {
             if (anim == null) return;
 
@@ -96,52 +106,127 @@ namespace Rebirth.Prototype
                 IsArmed = !weapon.State();
             }
 
-            Running();
-            Attack();
+			if (!isDead)
+			{
+				if (character.InteractableItem != null && PlayerInput.GetInteract())
+				{
+					character.InteractableItem.OnInteract();
+
+					if (character.InteractableItem is ItemBase)
+					{
+						GameManager.singleton.Hud.Bag.AddItem(character.InteractableItem as ItemBase);
+						(character.InteractableItem as ItemBase).OnPickup();
+					}
+
+					GameManager.singleton.Hud.CloseMessagePanel();
+
+					character.InteractableItem = null;
+				}
+
+				if (character.LeftHandItem != null && GM.IM.AttackLeft())
+				{
+					//if (!EventSystem.current.IsPointerOverGameObject())
+					//{
+						character.LeftHandItem.ItemAction();
+					//}
+				}
+				if (character.RightHandItem != null && GM.IM.AttackRight())
+				{
+					//if (!EventSystem.current.IsPointerOverGameObject())
+					//{
+						character.RightHandItem.ItemAction();
+					//}
+				}
+			}
+
+			Running();
         }
 
-        public void FixedUpdate()
+        public virtual void FixedUpdateClient()
         {
-            //Rotate();
-            Move();
+			if (!isDead)
+			{
+				if (character.LeftHandItem != null && Input.GetKeyDown(KeyCode.G))
+				{
+					//DropCurrentItem();
+				}
+			}
+
+			Move();
         }
 
-        public void LateUpdate()
+        public virtual void LatedUpdateClient()
         {
 
         }
 
-        private void Attack()
+		public void Attack(ItemBase weapon)
+		{
+			if(!IsAttacking)
+			{
+				if (IsArmed)
+				{
+					if (character.LeftHandItem == weapon)
+						AttackLeftWeapon(weapon);
+
+					if (character.RightHandItem == weapon)
+						AttackRightWeapon(weapon);
+				}
+				else
+				{
+					if(character.LeftHandItem == null && GM.IM.AttackLeft())
+					{
+						AttackLeftFist();
+					}
+
+					if(character.RightHandItem == null && GM.IM.AttackRight())
+					{
+						AttackRightFist();
+					}
+				}
+			}
+		}
+
+        public void AttackLeftWeapon(ItemBase weaponItem)
         {
-            if (Input.GetMouseButtonDown(0) && !IsAttacking)
+			if (!IsAttacking)
             {
-                if (IsArmed && character.LeftHandItem != null)
+                if (IsArmed && character.RightHandItem == weaponItem)
                 {
-                    ItemBase item = character.LeftHandItem.GetComponent<ItemBase>();
-                    item.ItemAction();
                     IsAttacking = true;
 
-                    StartCoroutine(Attacking(anim.GetCurrentAnimatorStateInfo(1).length));
+                    StartCoroutine(Attacking(anim.GetCurrentAnimatorStateInfo(0).length));
                 }
                 else if (IsArmed)
                 {
                     // In Kampf-Modus aber keine Waffe ausgerüstet = Faustkampf
 
                 }
-            }
-
-            if (Input.GetMouseButtonDown(1) && !IsAttacking)
-            {
-                if (IsArmed && character.RightHandItem != null)
-                {
-                    ItemBase item = character.RightHandItem.GetComponent<ItemBase>();
-                    item.ItemAction();
-                    IsAttacking = true;
-
-                    StartCoroutine(Attacking(anim.GetCurrentAnimatorStateInfo(1).length));
-                }
-            }
+            }           
         }
+
+		public void AttackRightWeapon(ItemBase weaponItem)
+		{
+			if (!IsAttacking)
+			{
+				if (IsArmed && character.RightHandItem == weaponItem)
+				{
+					IsAttacking = true;
+
+					StartCoroutine(Attacking(anim.GetCurrentAnimatorStateInfo(0).length));
+				}
+			}
+		}
+
+		public void AttackRightFist()
+		{
+
+		}
+
+		public void AttackLeftFist()
+		{
+
+		}
 
         IEnumerator Attacking(float length)
         {
@@ -206,10 +291,27 @@ namespace Rebirth.Prototype
             transform.rotation = Quaternion.Slerp(transform.rotation, dir, Time.deltaTime * rotationSpeed);
         }
 
-        #region Animation Events
-        // Called by Animation Events
+		public IEnumerator _Death()
+		{
+			//animator.SetTrigger("Death1Trigger");
+			//StartCoroutine(_LockMovementAndAttack(.1f, 1.5f));
+			//isDead = true;
+			//animator.SetBool("Moving", false);
+			//inputVec = new Vector3(0, 0, 0);
+			yield return null;
+		}
 
-        public void AttackEnd(int i)
+		public IEnumerator _Revive()
+		{
+			//animator.SetTrigger("Revive1Trigger");
+			//isDead = false;
+			yield return null;
+		}
+
+		#region Animation Events
+		// Called by Animation Events
+
+		public void AttackEnd(int i)
         {
             IsAttacking = false;
         }
