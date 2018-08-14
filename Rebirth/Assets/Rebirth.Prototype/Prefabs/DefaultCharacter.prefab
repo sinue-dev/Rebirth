@@ -2153,7 +2153,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1757621193855478}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2658506a9c201524e9173320eafe4989, type: 3}
   m_Name: 
@@ -2194,7 +2194,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa4176555c3865545be78d67a4c2eda8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MovementSpeed: 2
+  MovementSpeed: 4.5
   TurnSpeed: 1
   isDead: 0
   isBlocking: 0

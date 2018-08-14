@@ -18,6 +18,8 @@ public class GravityReceiver : MonoBehaviour
 	
 	void FixedUpdate ()
     {
+        if (gravity == null) return;
+        
         gravity.ApplyGravity(transform);	
 	}
 }

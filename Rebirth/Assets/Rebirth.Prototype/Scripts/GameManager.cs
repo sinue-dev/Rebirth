@@ -14,7 +14,6 @@ namespace Rebirth.Prototype
 
         void Awake()
         {
-
             if (singleton == null)
             {
                 singleton = this;
@@ -91,10 +90,7 @@ namespace Rebirth.Prototype
             public InputManager()
             {
                 keyJump = KeyCode.Space;
-                keyForward = KeyCode.W;
-                keyBackward = KeyCode.S;
-                keyLeft = KeyCode.A;
-                keyRight = KeyCode.D;
+                keyInteract = KeyCode.E;
             }
 
             public bool Jump()
@@ -112,26 +108,6 @@ namespace Rebirth.Prototype
 				return Input.GetAxis("Vertical");
 			}
 
-            public bool Forward()
-            {
-                return Input.GetKey(keyForward);
-            }
-
-            public bool Backward()
-            {
-                return Input.GetKey(keyBackward);
-            }
-
-            public bool Left()
-            {
-                return Input.GetKey(keyLeft);
-            }
-
-            public bool Right()
-            {
-                return Input.GetKey(keyRight);
-            }
-
 			public bool AttackLeft()
 			{
 				return Input.GetMouseButtonDown(0);
@@ -142,12 +118,13 @@ namespace Rebirth.Prototype
 				return Input.GetMouseButtonDown(1);
 			}
 
-            public KeyCode keyForward { get; set; }
-            public KeyCode keyBackward { get; set; }
-            public KeyCode keyLeft { get; set; }
-            public KeyCode keyRight { get; set; }
+            public bool Interact()
+            {
+                return Input.GetKey(keyInteract);
+            }
+
             public KeyCode keyJump { get; set; }
-            
+            public KeyCode keyInteract { get; set; }
         }
     }
 }

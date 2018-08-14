@@ -102,13 +102,14 @@ namespace Rebirth.Prototype
             if (Input.GetKeyDown("1"))
             {
                 //IsAttacking = true;
-                WeaponBase weapon = character.RightHandItem.GetComponent<WeaponBase>();
+                
+                ItemBase weapon = character.RightHandItem.GetComponent<ItemBase>();
                 IsArmed = !weapon.State();
             }
 
 			if (!isDead)
 			{
-				if (character.InteractableItem != null && PlayerInput.GetInteract())
+				if (character.InteractableItem != null && GM.IM.Interact())
 				{
 					character.InteractableItem.OnInteract();
 
@@ -125,17 +126,17 @@ namespace Rebirth.Prototype
 
 				if (character.LeftHandItem != null && GM.IM.AttackLeft())
 				{
-					//if (!EventSystem.current.IsPointerOverGameObject())
-					//{
+					if (!EventSystem.current.IsPointerOverGameObject())
+					{
 						character.LeftHandItem.ItemAction();
-					//}
+					}
 				}
 				if (character.RightHandItem != null && GM.IM.AttackRight())
 				{
-					//if (!EventSystem.current.IsPointerOverGameObject())
-					//{
+					if (!EventSystem.current.IsPointerOverGameObject())
+					{
 						character.RightHandItem.ItemAction();
-					//}
+					}
 				}
 			}
 
@@ -251,15 +252,10 @@ namespace Rebirth.Prototype
         {
             if (!CanWalk()) return;
 
-            if (GM.IM.Forward())
-            {
+            float x = GM.IM.MoveHorizontal(); // Seitwärts
+            float z = GM.IM.MoveVertical(); // Vorwärts
 
-            }
-
-            float x = Input.GetAxis("Horizontal"); // Seitwärts
-            float z = Input.GetAxis("Vertical"); // Vorwärts
-
-            float speed = new Vector2(z, x).sqrMagnitude;
+            //float speed = new Vector2(z, x).sqrMagnitude;
 
             IsWalking = (z != 0 || x != 0);
 
@@ -279,11 +275,8 @@ namespace Rebirth.Prototype
                 MoveX = x;
             }
 
-            Vector3 movement = new Vector3(x, 0, z) * MovementSpeed * Time.deltaTime;
-            character.rb.MovePosition(transform.position + movement);
-            //rb.MovePosition(transform.position + transform.forward * speed * MovementSpeed * Time.deltaTime);
-            //transform.position += Vector3.forward * z * MovementSpeed * Time.deltaTime;
-            //transform.position += Vector3.right * x * * MovementSpeed * Time.deltaTime;
+            Vector3 movement = (MoveX * transform.right * MovementSpeed * Time.deltaTime) + (MoveZ * transform.forward * MovementSpeed * Time.deltaTime); 
+            character.rb.MovePosition(character.rb.position + movement);
         }
 
         public void RotatePlayerToCameraDir(Quaternion dir)
