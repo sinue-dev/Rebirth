@@ -16,10 +16,10 @@ namespace Rebirth.Prototype
         public GameObject EntityLeftHand;
         public GameObject EntityRightHand;
 
-        public ItemBase LeftHandItem;
-        public ItemBase RightHandItem;
+        public Weapon LeftHandItem;
+        public Weapon RightHandItem;
 
-        public InteractableItemBase InteractableItem;
+        public Item InteractableItem;
 
         private Text _nameObject;
         public Text NamePrefab;

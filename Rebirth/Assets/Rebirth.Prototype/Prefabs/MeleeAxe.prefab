@@ -20,7 +20,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4104530688026690}
   - component: {fileID: 33825872476655102}
-  - component: {fileID: 136973132495601362}
   - component: {fileID: 23092768901078014}
   m_Layer: 0
   m_Name: Cylinder
@@ -37,12 +36,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4142924708809716}
-  - component: {fileID: 65287379456844628}
+  - component: {fileID: 135567630622480540}
   - component: {fileID: 114740863998599668}
   m_Layer: 0
   m_Name: MeleeAxe
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -83,9 +82,9 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1611019056554646}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.096, y: -0.036, z: 0.022}
-  m_LocalScale: {x: 1.0000005, y: 1.0000006, z: 1.0000006}
+  m_LocalRotation: {x: 0.7071068, y: 3.5527137e-15, z: 4.2162046e-22, w: 0.7071068}
+  m_LocalPosition: {x: -0, y: 0.17, z: 0.621}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4104530688026690}
   - {fileID: 4656582855719460}
@@ -196,23 +195,11 @@ BoxCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1918255436850896}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!65 &65287379456844628
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1611019056554646}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.75, y: 0.3, z: 0.1}
-  m_Center: {x: 0, y: 0.866, z: 0}
 --- !u!114 &114740863998599668
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -230,23 +217,23 @@ MonoBehaviour:
   IsConsumable: 0
   IsWeapon: 1
   weapon: 9
-  col: {fileID: 65287379456844628}
-  neededHandsToHold: 1
+  pickupCol: {fileID: 0}
+  damageCol: {fileID: 65171345007785826}
+  neededHandsToHold: 2
   PickPositionLeft: {x: -0.096, y: -0.036, z: 0.022}
   PickRotationLeft: {x: 90, y: 0, z: 0}
   PickPositionRight: {x: 0.096, y: -0.036, z: 0.022}
   PickRotationRight: {x: 90, y: 0, z: 0}
   DropRotation: {x: 0, y: 0, z: 0}
---- !u!136 &136973132495601362
-CapsuleCollider:
+--- !u!135 &135567630622480540
+SphereCollider:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1135814353453640}
+  m_GameObject: {fileID: 1611019056554646}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
+  serializedVersion: 2
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}

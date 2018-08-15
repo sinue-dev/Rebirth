@@ -7,7 +7,7 @@ namespace Rebirth.Prototype
 {
     public class BagSlot
     {
-        private Stack<ItemBase> mItemStack = new Stack<ItemBase>();
+        private Stack<Item> mItemStack = new Stack<Item>();
 
         private int mId = 0;
 
@@ -21,13 +21,13 @@ namespace Rebirth.Prototype
             get { return mId; }
         }
 
-        public void AddItem(ItemBase item)
+        public void AddItem(Item item)
         {
             item.Slot = this;
             mItemStack.Push(item);
         }
 
-        public ItemBase FirstItem
+        public Item FirstItem
         {
             get
             {
@@ -38,14 +38,14 @@ namespace Rebirth.Prototype
             }
         }
 
-        public bool IsStackable(ItemBase item)
+        public bool IsStackable(Item item)
         {
             if (IsEmpty)
                 return false;
 
-            ItemBase first = mItemStack.Peek();
+            Item first = mItemStack.Peek();
 
-            if (first.Name == item.Name)
+            if (first.ItemInfo.Name == item.ItemInfo.Name)
                 return true;
 
             return false;
@@ -61,13 +61,13 @@ namespace Rebirth.Prototype
             get { return mItemStack.Count; }
         }
 
-        public bool Remove(ItemBase item)
+        public bool Remove(Item item)
         {
             if (IsEmpty)
                 return false;
 
-            ItemBase first = mItemStack.Peek();
-            if (first.Name == item.Name)
+            Item first = mItemStack.Peek();
+            if (first.ItemInfo.Name == item.ItemInfo.Name)
             {
                 mItemStack.Pop();
                 return true;

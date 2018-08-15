@@ -21,7 +21,7 @@ namespace Rebirth.Prototype
             if (!RectTransformUtility.RectangleContainsScreenPoint(invPanel, Input.mousePosition))
             {
 
-                ItemBase item = eventData.pointerDrag.gameObject.GetComponent<ItemDragHandler>().Item;
+                Item item = eventData.pointerDrag.gameObject.GetComponent<ItemDragHandler>().Item;
                 if (item != null)
                 {
                     bag.RemoveItem(item);

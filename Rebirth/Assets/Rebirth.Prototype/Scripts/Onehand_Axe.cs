@@ -4,15 +4,14 @@ using UnityEngine;
 
 namespace Rebirth.Prototype
 {
-    public class Axe : ItemBase
+    public class Onehand_Axe : Weapon
     {
-
-        public override void OnUse()
+		public override void OnUse()
         {
 			character.Controller.StartCoroutine(character.Controller._SwitchWeapon(this));
         }
 
-        public override void ItemAction()
+        public override void OnAction()
         {
 			character.Controller.Attack(this);
         }

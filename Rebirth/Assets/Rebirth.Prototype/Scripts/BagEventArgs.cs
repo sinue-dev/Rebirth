@@ -7,11 +7,11 @@ namespace Rebirth.Prototype
 {
     public class BagEventArgs : EventArgs
     {
-        public BagEventArgs(ItemBase item)
+        public BagEventArgs(Item item)
         {
             Item = item;
         }
 
-        public ItemBase Item;
+        public Item Item;
     }
 }

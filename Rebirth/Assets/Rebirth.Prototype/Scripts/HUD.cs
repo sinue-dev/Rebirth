@@ -41,12 +41,12 @@ namespace Rebirth.Prototype
             get { return mIsMessagePanelOpened; }
         }
 
-        public void OpenMessagePanel(InteractableItemBase item)
+        public void OpenMessagePanel(Item item)
         {
             MessagePanel.SetActive(true);
 
             Text mpText = MessagePanel.transform.Find("Text").GetComponent<Text>();
-            mpText.text = item.InteractText;
+            mpText.text = item.ItemInfo.InteractText;
 
 
             mIsMessagePanelOpened = true;

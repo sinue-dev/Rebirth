@@ -44,7 +44,7 @@ namespace Rebirth.Prototype
             graphic.CrossFadeColor(color, _button.colors.fadeDuration, true, true);
         }
 
-        private ItemBase AttachedItem
+        private Item AttachedItem
         {
             get
             {
@@ -55,7 +55,7 @@ namespace Rebirth.Prototype
 
         public void OnItemClicked()
         {
-            ItemBase item = AttachedItem;
+            Item item = AttachedItem;
 
             if (item != null)
             {

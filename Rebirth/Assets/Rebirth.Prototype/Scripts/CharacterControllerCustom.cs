@@ -6,36 +6,41 @@ using UnityEngine.EventSystems;
 
 namespace Rebirth.Prototype
 {
-	public enum Hands_e
-	{
-		BOTH = 0,
-		LEFT = 1,
-		RIGHT = 2
-	}
-
     public enum Weapons_e
     {
-        HAND = 0,
-        TWOHANDSWORD = 1,
-        TWOHANDSPEAR = 2,
-        TWOHANDAXE = 3,
-        TWOHANDBOW = 4,
-        TWOHANDCROSSBOW = 5,
-        STAFF = 6,
-        SHIELD = 7,
-        LEFT_SWORD = 8,
-        RIGHT_SWORD = 9,
-        LEFT_MACE = 10,
-        RIGHT_MACE = 11,
-        LEFT_DAGGER = 12,
-        RIGHT_DAGGER = 13,
-        LEFT_ITEM = 14,
-        RIGHT_ITEM = 16,
-        LEFT_PISTOL = 16,
-        RIGHT_PISTOL = 17
-    }
+        FIST = 0,
+		ONEHAND_SWORD = 1,
+		ONEHAND_SHIELD = 2,
+		ONEHAND_AXE = 3,
+		ONEHAND_DAGGER = 4,
+		ONEHAND_MACE = 5,
+		ONEHAND_ITEM = 6,
+		TWOHAND_SWORD = 7,
+		TWOHAND_SPEAR = 8,
+		TWOHAND_AXE = 9,
+		TWOHAND_BOW = 10,
+		TWOHAND_CROSSBOW = 11,
+		TWOHAND_STAFF = 12,
+		TWOHAND_ITEM = 13
+	}
 
-    public class CharacterControllerCustom : MonoBehaviour
+	public enum ItemTypes_e
+	{
+		ITEM,
+		CONSUMABLE,
+		WEAPON,
+		EQUIPMENT
+	}
+
+	public enum HoldingHands_e
+	{
+		ONE,
+		LEFT,
+		RIGHT,
+		BOTH
+	}
+
+	public class CharacterControllerCustom : MonoBehaviour
     {
         GameManager GM;
         RebirthPlayerController character;
@@ -87,7 +92,19 @@ namespace Rebirth.Prototype
             set { anim.SetFloat("h", value); }
         }
 
-        void Start()
+		public int LeftWeapon
+		{
+			get { return anim.GetInteger("leftWeapon"); }
+			set { anim.SetInteger("leftWeapon", value); }
+		}
+
+		public int RightWeapon
+		{
+			get { return anim.GetInteger("rightWeapon"); }
+			set { anim.SetInteger("rightWeapon", value); }
+		}
+
+		void Start()
         {
             GM = GameManager.singleton;
             character = GetComponent<RebirthPlayerController>();
@@ -112,10 +129,10 @@ namespace Rebirth.Prototype
 				{
 					character.InteractableItem.OnInteract();
 
-					if (character.InteractableItem is ItemBase)
+					if (character.InteractableItem is Item)
 					{
-						GameManager.singleton.Hud.Bag.AddItem(character.InteractableItem as ItemBase);
-						(character.InteractableItem as ItemBase).OnPickup();
+						GameManager.singleton.Hud.Bag.AddItem(character.InteractableItem as Item);
+						(character.InteractableItem as Item).OnPickup();
 					}
 
 					GameManager.singleton.Hud.CloseMessagePanel();
@@ -127,14 +144,14 @@ namespace Rebirth.Prototype
 				{
 					if (!EventSystem.current.IsPointerOverGameObject())
 					{
-						character.LeftHandItem.ItemAction();
+						character.LeftHandItem.OnAction();
 					}
 				}
 				if (character.RightHandItem != null && GM.IM.AttackRight())
 				{
 					if (!EventSystem.current.IsPointerOverGameObject())
 					{
-						character.RightHandItem.ItemAction();
+						character.RightHandItem.OnAction();
 					}
 				}
 			}
@@ -148,7 +165,7 @@ namespace Rebirth.Prototype
 			{
 				if (character.LeftHandItem != null && Input.GetKeyDown(KeyCode.G))
 				{
-					//DropCurrentItem();
+					//DropItem();
 				}
 			}
 
@@ -160,7 +177,7 @@ namespace Rebirth.Prototype
 
         }
 
-		public void Attack(ItemBase weapon)
+		public void Attack(Weapon weapon)
 		{
 			if(!IsAttacking)
 			{
@@ -187,7 +204,7 @@ namespace Rebirth.Prototype
 			}
 		}
 
-        public void AttackLeftWeapon(ItemBase weaponItem)
+        public void AttackLeftWeapon(Weapon weaponItem)
         {
 			if (!IsAttacking)
             {
@@ -206,7 +223,7 @@ namespace Rebirth.Prototype
             }           
         }
 
-		public void AttackRightWeapon(ItemBase weaponItem)
+		public void AttackRightWeapon(Weapon weaponItem)
 		{
 			if (!IsAttacking)
 			{
@@ -285,24 +302,27 @@ namespace Rebirth.Prototype
             transform.rotation = Quaternion.Slerp(transform.rotation, dir, Time.deltaTime * rotationSpeed);
         }
 
-		public IEnumerator _SwitchWeapon(ItemBase weapon)
+		public IEnumerator _SwitchWeapon(Weapon weaponItem)
 		{
-			switch(weapon.neededHandsToHold)
+			switch(weaponItem.ItemInfo.HoldingHand)
 			{
-				case InteractableItemBase.NeededHandsToHold_e.ONE:
+				case HoldingHands_e.ONE:
 
 					break;
-				case InteractableItemBase.NeededHandsToHold_e.LEFT:
-					character.SetItemActive(weapon, true, character.EntityLeftHand);
-					character.LeftHandItem = weapon;
-					weapon.OnHoldLeft();
+				case HoldingHands_e.LEFT:
+					character.SetItemActive(weaponItem, true, character.EntityLeftHand);
+					character.LeftHandItem = weaponItem;
+					weaponItem.OnHoldLeft();
+					//LeftWeapon = (int)weaponItem.ItemInfo.weapon;
 					break;
-				case InteractableItemBase.NeededHandsToHold_e.RIGHT:
-					character.SetItemActive(weapon, true, character.EntityRightHand);
-					character.RightHandItem = weapon;
-					weapon.OnHoldRight();
+				case HoldingHands_e.RIGHT:
+					character.SetItemActive(weaponItem, true, character.EntityRightHand);
+					character.RightHandItem = weaponItem;
+					weaponItem.OnHoldRight();
+					//RightWeapon = (int)weaponItem.ItemInfo.weapon;
+					
 					break;
-				case InteractableItemBase.NeededHandsToHold_e.BOTH:
+				case HoldingHands_e.BOTH:
 
 					break;
 			}
@@ -338,10 +358,10 @@ namespace Rebirth.Prototype
         {
             if (!IsArmed) return;
 
-            ItemBase item = character.RightHandItem.GetComponent<ItemBase>();
-            if (item != null)
+            Weapon weapon = character.RightHandItem.GetComponent<Weapon>();
+            if (weapon != null && weapon.ItemInfo.ItemType == ItemTypes_e.WEAPON)
             {
-                item.col.enabled = true;
+				weapon.OnActivateWeaponDamage();
             }
         }
 
@@ -349,28 +369,28 @@ namespace Rebirth.Prototype
         {
             if (!IsArmed) return;
 
-            ItemBase item = character.RightHandItem.GetComponent<ItemBase>();
-            if (item != null)
-            {
-                item.col.enabled = true;
+			Weapon weapon = character.RightHandItem.GetComponent<Weapon>();
+			if (weapon != null && weapon.ItemInfo.ItemType == ItemTypes_e.WEAPON)
+			{
+				weapon.OnDeactivateWeaponDamage();
             }
         }
 
         public void EventShowWeapon(int i)
         {
-            ItemBase item = character.RightHandItem.GetComponent<ItemBase>();
-            if (item != null)
-            {
-                item.Toggle(IsArmed);
+			Weapon weapon = character.RightHandItem.GetComponent<Weapon>();
+			if (weapon != null && weapon.ItemInfo.ItemType == ItemTypes_e.WEAPON)
+			{
+				weapon.Toggle(IsArmed);
             }
         }
 
         public void EventHideWeapon(int i)
         {
-            ItemBase item = character.RightHandItem.GetComponent<ItemBase>();
-            if (item != null)
-            {
-                item.Toggle(IsArmed);
+			Weapon weapon = character.RightHandItem.GetComponent<Weapon>();
+			if (weapon != null && weapon.ItemInfo.ItemType == ItemTypes_e.WEAPON)
+			{
+				weapon.Toggle(IsArmed);
             }
         }
         #endregion

@@ -8,7 +8,7 @@ namespace Rebirth.Prototype
     public class ItemDragHandler : MonoBehaviour, IDragHandler, IEndDragHandler
     {
 
-        public ItemBase Item { get; set; }
+        public Item Item { get; set; }
 
         public void OnDrag(PointerEventData eventData)
         {

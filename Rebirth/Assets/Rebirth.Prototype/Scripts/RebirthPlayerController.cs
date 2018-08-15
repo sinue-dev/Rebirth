@@ -89,18 +89,18 @@ namespace Rebirth.Prototype
 
         private void OnTriggerEnter(Collider other)
         {
-            InteractableItemBase item = other.GetComponent<InteractableItemBase>();
+            Item item = other.GetComponent<Item>();
             if (item != null)
             {
                 InteractableItem = item;
 
-                GameManager.singleton.Hud.OpenMessagePanel(InteractableItem);
+                GameManager.singleton.Hud.OpenMessagePanel(item);
             }
         }
 
         private void OnTriggerExit(Collider other)
         {
-            InteractableItemBase item = other.GetComponent<InteractableItemBase>();
+			Item item = other.GetComponent<Item>();
             if (item != null)
             {
                 GameManager.singleton.Hud.CloseMessagePanel();
@@ -113,7 +113,7 @@ namespace Rebirth.Prototype
 
         private void Bag_ItemUsed(object sender, BagEventArgs e)
         {
-            if (!e.Item.IsConsumable)
+            if (e.Item.ItemInfo.ItemType == ItemTypes_e.WEAPON)
             {
                 // If the player carries an item, un-use it (remove from player's hand)
                 if (LeftHandItem != null)
@@ -121,11 +121,11 @@ namespace Rebirth.Prototype
                     SetItemActive(LeftHandItem, false, EntityLeftHand);
                 }
 
-                ItemBase item = e.Item;
+                Item item = e.Item;
 
                 // Use item (put it to hand of the player)
-                SetItemActive(item, true, EntityLeftHand);
-                LeftHandItem = e.Item;
+                SetItemActive((Weapon)item, true, EntityLeftHand);
+                LeftHandItem = (Weapon)e.Item;
             }
         }
 
@@ -146,7 +146,7 @@ namespace Rebirth.Prototype
                 if (index == e.Item.Slot.Id)
                 {
                     image.enabled = true;
-                    image.sprite = e.Item.Image;
+                    image.sprite = e.Item.ItemInfo.Image;
                     image.type = Image.Type.Filled;
 
                     int itemCount = e.Item.Slot.Count;
@@ -220,7 +220,7 @@ namespace Rebirth.Prototype
         }
 
 
-        public void SetItemActive(ItemBase item, bool active, GameObject Hand)
+        public void SetItemActive(Weapon item, bool active, GameObject Hand)
         {
 			item.transform.parent = active ? Hand.transform : null;
 			item.Toggle(active);
@@ -230,22 +230,22 @@ namespace Rebirth.Prototype
             
         }
 
-        private void DropCurrentItem()
+        private void DropItem(Item item)
         {
            // _animator.SetTrigger("tr_drop");
 
-            GameObject goItem = (LeftHandItem as MonoBehaviour).gameObject;
+            //GameObject goItem = (LeftHandItem as MonoBehaviour).gameObject;
 
-            GameManager.singleton.Hud.Bag.RemoveItem(LeftHandItem);
+            //GameManager.singleton.Hud.Bag.RemoveItem(item);
 
-            // Throw animation
-            Rigidbody rbItem = goItem.AddComponent<Rigidbody>();
-            if (rbItem != null)
-            {
-                rbItem.AddForce(transform.forward * 2.0f, ForceMode.Impulse);
+            //// Throw animation
+            //Rigidbody rbItem = goItem.AddComponent<Rigidbody>();
+            //if (rbItem != null)
+            //{
+            //    rbItem.AddForce(transform.forward * 2.0f, ForceMode.Impulse);
 
-                Invoke("DoDropItem", 0.25f);
-            }
+            //    Invoke("DoDropItem", 0.25f);
+            //}
         }
 
         public void DoDropItem()

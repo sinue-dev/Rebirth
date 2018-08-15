@@ -23,7 +23,7 @@ namespace Rebirth.Prototype
             }
         }
 
-        private BagSlot FindStackableSlot(ItemBase item)
+        private BagSlot FindStackableSlot(Item item)
         {
             foreach (BagSlot slot in mSlots)
             {
@@ -43,7 +43,7 @@ namespace Rebirth.Prototype
             return null;
         }
 
-        public void AddItem(ItemBase item)
+        public void AddItem(Item item)
         {
             BagSlot freeSlot = FindStackableSlot(item);
             if (freeSlot == null)
@@ -62,7 +62,7 @@ namespace Rebirth.Prototype
             }
         }
 
-        internal void UseItem(ItemBase item)
+        internal void UseItem(Item item)
         {
             if (ItemUsed != null)
             {
@@ -70,7 +70,7 @@ namespace Rebirth.Prototype
             }
         }
 
-        public void RemoveItem(ItemBase item)
+        public void RemoveItem(Item item)
         {
             foreach (BagSlot slot in mSlots)
             {
