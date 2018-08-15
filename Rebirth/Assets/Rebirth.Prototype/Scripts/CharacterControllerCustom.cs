@@ -101,10 +101,9 @@ namespace Rebirth.Prototype
 
             if (Input.GetKeyDown("1"))
             {
-                //IsAttacking = true;
-                
-                ItemBase weapon = character.RightHandItem.GetComponent<ItemBase>();
-                IsArmed = !weapon.State();
+                //IsAttacking = true;                
+                //ItemBase weapon = character.RightHandItem.GetComponent<ItemBase>();
+                //IsArmed = !weapon.State();
             }
 
 			if (!isDead)
@@ -192,9 +191,10 @@ namespace Rebirth.Prototype
         {
 			if (!IsAttacking)
             {
-                if (IsArmed && character.RightHandItem == weaponItem)
+                if (IsArmed && character.LeftHandItem == weaponItem)
                 {
-                    IsAttacking = true;
+					character.animator.SetTrigger("AttackLMB");
+					IsAttacking = true;
 
                     StartCoroutine(Attacking(anim.GetCurrentAnimatorStateInfo(0).length));
                 }
@@ -212,6 +212,7 @@ namespace Rebirth.Prototype
 			{
 				if (IsArmed && character.RightHandItem == weaponItem)
 				{
+					character.animator.SetTrigger("AttackRMB");
 					IsAttacking = true;
 
 					StartCoroutine(Attacking(anim.GetCurrentAnimatorStateInfo(0).length));
@@ -283,6 +284,30 @@ namespace Rebirth.Prototype
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, dir, Time.deltaTime * rotationSpeed);
         }
+
+		public IEnumerator _SwitchWeapon(ItemBase weapon)
+		{
+			switch(weapon.neededHandsToHold)
+			{
+				case InteractableItemBase.NeededHandsToHold_e.ONE:
+
+					break;
+				case InteractableItemBase.NeededHandsToHold_e.LEFT:
+					character.SetItemActive(weapon, true, character.EntityLeftHand);
+					character.LeftHandItem = weapon;
+					weapon.OnHoldLeft();
+					break;
+				case InteractableItemBase.NeededHandsToHold_e.RIGHT:
+					character.SetItemActive(weapon, true, character.EntityRightHand);
+					character.RightHandItem = weapon;
+					weapon.OnHoldRight();
+					break;
+				case InteractableItemBase.NeededHandsToHold_e.BOTH:
+
+					break;
+			}
+			yield return null;
+		}
 
 		public IEnumerator _Death()
 		{

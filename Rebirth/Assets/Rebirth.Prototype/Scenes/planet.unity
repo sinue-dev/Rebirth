@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -245,15 +245,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4142924708809716, guid: 32321f758ce737a4d9b95898bd93ee50, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4142924708809716, guid: 32321f758ce737a4d9b95898bd93ee50, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0.05
+      value: 0.17
       objectReference: {fileID: 0}
     - target: {fileID: 4142924708809716, guid: 32321f758ce737a4d9b95898bd93ee50, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -1.09
+      value: 0.621
       objectReference: {fileID: 0}
     - target: {fileID: 4142924708809716, guid: 32321f758ce737a4d9b95898bd93ee50, type: 2}
       propertyPath: m_LocalRotation.x
@@ -261,11 +261,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4142924708809716, guid: 32321f758ce737a4d9b95898bd93ee50, type: 2}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 3.5527137e-15
       objectReference: {fileID: 0}
     - target: {fileID: 4142924708809716, guid: 32321f758ce737a4d9b95898bd93ee50, type: 2}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: 4.2162046e-22
       objectReference: {fileID: 0}
     - target: {fileID: 4142924708809716, guid: 32321f758ce737a4d9b95898bd93ee50, type: 2}
       propertyPath: m_LocalRotation.w
@@ -282,6 +282,59 @@ Prefab:
     - target: {fileID: 4142924708809716, guid: 32321f758ce737a4d9b95898bd93ee50, type: 2}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 114740863998599668, guid: 32321f758ce737a4d9b95898bd93ee50,
+        type: 2}
+      propertyPath: neededHandsToHold
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4142924708809716, guid: 32321f758ce737a4d9b95898bd93ee50, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4142924708809716, guid: 32321f758ce737a4d9b95898bd93ee50, type: 2}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4142924708809716, guid: 32321f758ce737a4d9b95898bd93ee50, type: 2}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4104530688026690, guid: 32321f758ce737a4d9b95898bd93ee50, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0.366
+      objectReference: {fileID: 0}
+    - target: {fileID: 4104530688026690, guid: 32321f758ce737a4d9b95898bd93ee50, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4656582855719460, guid: 32321f758ce737a4d9b95898bd93ee50, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0.866
+      objectReference: {fileID: 0}
+    - target: {fileID: 4656582855719460, guid: 32321f758ce737a4d9b95898bd93ee50, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 65287379456844628, guid: 32321f758ce737a4d9b95898bd93ee50,
+        type: 2}
+      propertyPath: m_Center.y
+      value: 0.866
+      objectReference: {fileID: 0}
+    - target: {fileID: 114740863998599668, guid: 32321f758ce737a4d9b95898bd93ee50,
+        type: 2}
+      propertyPath: PickPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114740863998599668, guid: 32321f758ce737a4d9b95898bd93ee50,
+        type: 2}
+      propertyPath: PickPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114740863998599668, guid: 32321f758ce737a4d9b95898bd93ee50,
+        type: 2}
+      propertyPath: PickPosition.z
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 32321f758ce737a4d9b95898bd93ee50, type: 2}

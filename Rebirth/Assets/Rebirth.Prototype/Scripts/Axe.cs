@@ -9,13 +9,12 @@ namespace Rebirth.Prototype
 
         public override void OnUse()
         {
-            //base.OnUse();
-            //player.Controller.StartCoroutine(player.Controller._SwitchWeapon(Weapons_e.LEFT_SWORD));
+			character.Controller.StartCoroutine(character.Controller._SwitchWeapon(this));
         }
 
         public override void ItemAction()
         {
-			player.Controller.Attack(this);
+			character.Controller.Attack(this);
         }
     }
 }

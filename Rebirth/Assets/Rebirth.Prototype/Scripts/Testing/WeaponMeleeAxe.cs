@@ -6,12 +6,12 @@ public class WeaponMeleeAxe : WeaponBase
 {
 	public override void SwingLeft()
 	{
-		player._animator.SetTrigger("AttackLMB");
+		
 	}
 
 	public override void SwingRight()
 	{
-		player._animator.SetTrigger("AttackRMB");
+		
 	}
 
 	void OnTriggerEnter(Collider other)

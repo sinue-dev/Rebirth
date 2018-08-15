@@ -118,14 +118,13 @@ namespace Rebirth.Prototype
                 // If the player carries an item, un-use it (remove from player's hand)
                 if (LeftHandItem != null)
                 {
-                    SetItemActive(LeftHandItem, false);
+                    SetItemActive(LeftHandItem, false, EntityLeftHand);
                 }
 
                 ItemBase item = e.Item;
 
                 // Use item (put it to hand of the player)
-                SetItemActive(item, true);
-
+                SetItemActive(item, true, EntityLeftHand);
                 LeftHandItem = e.Item;
             }
         }
@@ -177,10 +176,8 @@ namespace Rebirth.Prototype
 
         private void Bag_ItemRemoved(object sender, BagEventArgs e)
         {
-            Transform bagPanel = transform.Find("BagPanel");
-
             int index = -1;
-            foreach (Transform slot in bagPanel)
+            foreach (Transform slot in GameManager.singleton.Hud.UIBagPanel.transform)
             {
                 index++;
 
@@ -223,12 +220,14 @@ namespace Rebirth.Prototype
         }
 
 
-        private void SetItemActive(ItemBase item, bool active)
+        public void SetItemActive(ItemBase item, bool active, GameObject Hand)
         {
-            item.Toggle(active);
+			item.transform.parent = active ? Hand.transform : null;
+			item.Toggle(active);
+
             //GameObject currentItem = (item as MonoBehaviour).gameObject;
             //currentItem.SetActive(active);
-            //currentItem.transform.parent = active ? PlayerLeftHand.transform : null;
+            
         }
 
         private void DropCurrentItem()

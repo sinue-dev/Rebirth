@@ -4,27 +4,29 @@ using UnityEngine;
 
 namespace Rebirth.Prototype
 {
-    public class InteractableItemBase : MonoBehaviour
-    {
-        public string Name;
+	public class InteractableItemBase : MonoBehaviour
+	{
+		public string Name;
 
-        public Sprite Image;
+		public Sprite Image;
 
-        public string InteractText = "Press F to pickup the item";
+		public string InteractText = "Press E to pickup the item";
 
-        public bool IsConsumable;
-        public bool IsWeapon;
-        public Weapons_e weapon;
+		public bool IsConsumable;
+		public bool IsWeapon;
+		public Weapons_e weapon;
 
-        public Collider col;
+		public Collider col;
 
-        public enum NeededHandsToHold_e
-        {
-            ONE,
-            LEFT,
-            RIGHT,
-            BOTH
-        }
+		public enum NeededHandsToHold_e
+		{
+			ONE,
+			LEFT,
+			RIGHT,
+			BOTH
+		}
+
+		public NeededHandsToHold_e neededHandsToHold;
 
         public virtual void OnInteract()
         {
@@ -34,12 +36,10 @@ namespace Rebirth.Prototype
 
     public class ItemBase : InteractableItemBase
     {
-        public RebirthPlayerController player;
-
-        void Start()
-        {
-            player = GameManager.singleton.LocalPlayer;
-        }
+        public RebirthPlayerController character
+		{
+			get { return GameManager.singleton.LocalPlayer; }
+		}
 
         public BagSlot Slot
         {
@@ -48,20 +48,19 @@ namespace Rebirth.Prototype
 
         public virtual void OnUse()
         {
-            transform.localPosition = PickPosition;
-            transform.localEulerAngles = PickRotation;
+            
         }
 
         public virtual void OnHoldLeft()
         {
-            transform.localPosition = PickPosition;
-            transform.localEulerAngles = PickRotation;
+            transform.localPosition = PickPositionLeft;
+            transform.localEulerAngles = PickRotationLeft;
         }
 
         public virtual void OnHoldRight()
         {
-            transform.localPosition = PickPosition;
-            transform.localEulerAngles = PickRotation;
+            transform.localPosition = PickPositionRight;
+            transform.localEulerAngles = PickRotationRight;
         }
 
         public virtual void OnDrop()
@@ -79,7 +78,7 @@ namespace Rebirth.Prototype
         public virtual void OnPickup()
         {
             Destroy(gameObject.GetComponent<Rigidbody>());
-            gameObject.SetActive(false);
+			Hide();
 
         }
 
@@ -88,9 +87,11 @@ namespace Rebirth.Prototype
 
         }
 
-        public Vector3 PickPosition;
+        public Vector3 PickPositionLeft;
+        public Vector3 PickRotationLeft;
 
-        public Vector3 PickRotation;
+		public Vector3 PickPositionRight;
+		public Vector3 PickRotationRight;
 
         public Vector3 DropRotation;
 
