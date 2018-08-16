@@ -8,12 +8,12 @@ namespace Rebirth.Prototype
     {
 		public override void OnUse()
         {
-			character.Controller.StartCoroutine(character.Controller._SwitchWeapon(this));
+			GameManager.singleton.LocalPlayer.Controller.StartCoroutine(GameManager.singleton.LocalPlayer.Controller._SwitchWeapon(this));
         }
 
         public override void OnAction()
         {
-			character.Controller.Attack(this);
+			GameManager.singleton.LocalPlayer.Controller.Attack(this);
         }
     }
 }

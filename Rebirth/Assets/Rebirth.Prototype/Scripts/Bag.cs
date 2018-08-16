@@ -9,17 +9,21 @@ namespace Rebirth.Prototype
     {
         private const int SLOTS = 8;
 
-        private IList<BagSlot> mSlots = new List<BagSlot>();
+        private List<BagSlot> mSlots = new List<BagSlot>();
 
         public event EventHandler<BagEventArgs> ItemAdded;
         public event EventHandler<BagEventArgs> ItemRemoved;
         public event EventHandler<BagEventArgs> ItemUsed;
 
-        public Bag()
+        public void Start()
         {
-            for (int i = 0; i < SLOTS; i++)
+			Transform bagTransform = GameManager.singleton.Hud.UIBagPanel.transform;
+			for (int i = 0; i < bagTransform.childCount; i++)
             {
-                mSlots.Add(new BagSlot(i));
+				GameObject slot = bagTransform.GetChild(i).gameObject;
+				BagSlot bagSlot = slot.AddComponent<BagSlot>();
+				bagSlot.InitSlot(i);
+                mSlots.Add(bagSlot);
             }
         }
 
@@ -62,13 +66,38 @@ namespace Rebirth.Prototype
             }
         }
 
-        internal void UseItem(Item item)
+        public void UseItem(Item item)
         {
             if (ItemUsed != null)
             {
                 ItemUsed(this, new BagEventArgs(item));
             }
         }
+
+		public void MoveItem(Item item, BagSlot fromSlot, BagSlot toSlot)
+		{
+			if (toSlot.IsEmpty)
+			{
+				if (fromSlot.Remove(item))
+				{
+					if (ItemRemoved != null)
+					{
+						ItemRemoved(this, new BagEventArgs(item));
+					}
+
+					toSlot.AddItem(item);
+
+					if(ItemAdded != null)
+					{
+						ItemAdded(this, new BagEventArgs(item));
+					}
+				}
+			}
+			else
+			{
+
+			}
+		}
 
         public void RemoveItem(Item item)
         {

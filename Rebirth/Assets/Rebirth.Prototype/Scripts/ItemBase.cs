@@ -11,11 +11,6 @@ namespace Rebirth.Prototype
 			get; set;
 		}
 
-		public RebirthPlayerController character
-		{
-			get { return GameManager.singleton.LocalPlayer; }
-		}		
-
 		public SphereCollider pickupCol;
 
 		public virtual void OnInteract()

@@ -113,20 +113,22 @@ namespace Rebirth.Prototype
 
         private void Bag_ItemUsed(object sender, BagEventArgs e)
         {
-            if (e.Item.ItemInfo.ItemType == ItemTypes_e.WEAPON)
-            {
-                // If the player carries an item, un-use it (remove from player's hand)
-                if (LeftHandItem != null)
-                {
-                    SetItemActive(LeftHandItem, false, EntityLeftHand);
-                }
+    //        if (e.Item.ItemInfo.ItemType == ItemTypes_e.WEAPON)
+    //        {
+				//e.Item.OnUse();
 
-                Item item = e.Item;
+    //            // If the player carries an item, un-use it (remove from player's hand)
+    //            //if (LeftHandItem != null)
+    //            //{
+    //            //    SetItemActive(LeftHandItem, false, EntityLeftHand);
+    //            //}
 
-                // Use item (put it to hand of the player)
-                SetItemActive((Weapon)item, true, EntityLeftHand);
-                LeftHandItem = (Weapon)e.Item;
-            }
+    //            //Item item = e.Item;
+
+    //            //// Use item (put it to hand of the player)
+    //            //SetItemActive((Weapon)item, true, EntityLeftHand);
+    //            //LeftHandItem = (Weapon)e.Item;
+    //        }
         }
 
         private void Bag_ItemAdded(object sender, BagEventArgs e)

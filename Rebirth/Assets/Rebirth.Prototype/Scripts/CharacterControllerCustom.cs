@@ -94,14 +94,14 @@ namespace Rebirth.Prototype
 
 		public int LeftWeapon
 		{
-			get { return anim.GetInteger("leftWeapon"); }
-			set { anim.SetInteger("leftWeapon", value); }
+			get { return anim.GetInteger("LeftWeapon"); }
+			set { anim.SetInteger("LeftWeapon", value); }
 		}
 
 		public int RightWeapon
 		{
-			get { return anim.GetInteger("rightWeapon"); }
-			set { anim.SetInteger("rightWeapon", value); }
+			get { return anim.GetInteger("RightWeapon"); }
+			set { anim.SetInteger("RightWeapon", value); }
 		}
 
 		void Start()
@@ -115,13 +115,6 @@ namespace Rebirth.Prototype
         public virtual void UpdateClient()
         {
             if (anim == null) return;
-
-            if (Input.GetKeyDown("1"))
-            {
-                //IsAttacking = true;                
-                //ItemBase weapon = character.RightHandItem.GetComponent<ItemBase>();
-                //IsArmed = !weapon.State();
-            }
 
 			if (!isDead)
 			{
@@ -304,7 +297,20 @@ namespace Rebirth.Prototype
 
 		public IEnumerator _SwitchWeapon(Weapon weaponItem)
 		{
-			switch(weaponItem.ItemInfo.HoldingHand)
+			if (IsArmed)
+			{
+				StartCoroutine(_UnSheathWeapon(weaponItem));
+			}
+			else
+			{
+				StartCoroutine(_SheathWeapon(weaponItem));
+			}
+			yield return null;
+		}
+
+		public IEnumerator _SheathWeapon(Weapon weaponItem)
+		{
+			switch (weaponItem.ItemInfo.HoldingHand)
 			{
 				case HoldingHands_e.ONE:
 
@@ -313,19 +319,56 @@ namespace Rebirth.Prototype
 					character.SetItemActive(weaponItem, true, character.EntityLeftHand);
 					character.LeftHandItem = weaponItem;
 					weaponItem.OnHoldLeft();
-					//LeftWeapon = (int)weaponItem.ItemInfo.weapon;
+					LeftWeapon = (int)((CItemWeapon)weaponItem.ItemInfo).weapon;
+					IsArmed = true;
+					
 					break;
 				case HoldingHands_e.RIGHT:
 					character.SetItemActive(weaponItem, true, character.EntityRightHand);
 					character.RightHandItem = weaponItem;
 					weaponItem.OnHoldRight();
-					//RightWeapon = (int)weaponItem.ItemInfo.weapon;
-					
+					RightWeapon = (int)((CItemWeapon)weaponItem.ItemInfo).weapon;
+					IsArmed = true;
+
 					break;
 				case HoldingHands_e.BOTH:
 
 					break;
 			}
+
+			anim.SetTrigger("SwitchWeapon");
+
+			yield return null;
+		}
+
+		public IEnumerator _UnSheathWeapon(Weapon weaponItem)
+		{
+			switch (weaponItem.ItemInfo.HoldingHand)
+			{
+				case HoldingHands_e.ONE:
+
+					break;
+				case HoldingHands_e.LEFT:
+					character.SetItemActive(weaponItem, false, character.EntityLeftHand);
+					character.LeftHandItem = null;
+					LeftWeapon = 0; ;
+					IsArmed = false;
+
+					break;
+				case HoldingHands_e.RIGHT:					
+					character.SetItemActive(weaponItem, false, character.EntityRightHand);
+					character.RightHandItem = null;
+					RightWeapon = 0;
+					IsArmed = false;
+
+					break;
+				case HoldingHands_e.BOTH:
+
+					break;
+			}
+
+			anim.SetTrigger("SwitchWeapon");
+
 			yield return null;
 		}
 
@@ -354,7 +397,7 @@ namespace Rebirth.Prototype
             IsAttacking = false;
         }
 
-        public void EventActivateWeaponDamage(int i)
+        public void EventActivateWeaponDamage()
         {
             if (!IsArmed) return;
 
@@ -365,7 +408,7 @@ namespace Rebirth.Prototype
             }
         }
 
-        public void EventDeactivateWeaponDamage(int i)
+        public void EventDeactivateWeaponDamage()
         {
             if (!IsArmed) return;
 
@@ -376,16 +419,28 @@ namespace Rebirth.Prototype
             }
         }
 
-        public void EventShowWeapon(int i)
+        public void EventShowWeapon()
         {
-			Weapon weapon = character.RightHandItem.GetComponent<Weapon>();
-			if (weapon != null && weapon.ItemInfo.ItemType == ItemTypes_e.WEAPON)
+			if(LeftWeapon != 0)
 			{
-				weapon.Toggle(IsArmed);
-            }
+				Weapon weapon = character.LeftHandItem.GetComponent<Weapon>();
+				if (weapon != null && weapon.ItemInfo.ItemType == ItemTypes_e.WEAPON)
+				{
+					weapon.Toggle(IsArmed);
+				}
+			}
+
+			if(RightWeapon != 0)
+			{
+				Weapon weapon = character.RightHandItem.GetComponent<Weapon>();
+				if (weapon != null && weapon.ItemInfo.ItemType == ItemTypes_e.WEAPON)
+				{
+					weapon.Toggle(IsArmed);
+				}
+			}			
         }
 
-        public void EventHideWeapon(int i)
+        public void EventHideWeapon()
         {
 			Weapon weapon = character.RightHandItem.GetComponent<Weapon>();
 			if (weapon != null && weapon.ItemInfo.ItemType == ItemTypes_e.WEAPON)

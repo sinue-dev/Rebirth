@@ -6,6 +6,7 @@ namespace Rebirth.Prototype
 {
     public class UIBagPanel : UIBase
     {
+		public GameObject emptySlot;
 
         // Use this for initialization
         void Start()

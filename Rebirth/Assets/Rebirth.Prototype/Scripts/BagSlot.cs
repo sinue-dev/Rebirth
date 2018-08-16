@@ -5,20 +5,22 @@ using UnityEngine;
 
 namespace Rebirth.Prototype
 {
-    public class BagSlot
+    public class BagSlot : MonoBehaviour
     {
         private Stack<Item> mItemStack = new Stack<Item>();
+        public int SlotId = 0;
 
-        private int mId = 0;
-
-        public BagSlot(int id)
+        public void InitSlot(int id)
         {
-            mId = id;
-        }
+			SlotId = id;
+			mItemStack = new Stack<Item>();
+
+		}
 
         public int Id
         {
-            get { return mId; }
+            get { return SlotId; }
+			set { SlotId = value; }
         }
 
         public void AddItem(Item item)

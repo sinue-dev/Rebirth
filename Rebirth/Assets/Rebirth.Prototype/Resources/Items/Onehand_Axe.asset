@@ -17,8 +17,8 @@ MonoBehaviour:
   ItemType: 2
   HoldingHand: 2
   LeftHandPosition: {x: 0, y: 0, z: 0}
-  LeftHandRotation: {x: 0, y: 0, z: 0}
+  LeftHandRotation: {x: 90, y: 0, z: 0}
   RightHandPosition: {x: 0, y: 0, z: 0}
-  RightHandRotation: {x: 0, y: 0, z: 0}
+  RightHandRotation: {x: 90, y: 0, z: 0}
   DropRotation: {x: 0, y: 0, z: 0}
   weapon: 1

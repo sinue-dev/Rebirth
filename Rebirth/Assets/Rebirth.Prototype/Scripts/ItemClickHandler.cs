@@ -44,7 +44,7 @@ namespace Rebirth.Prototype
             graphic.CrossFadeColor(color, _button.colors.fadeDuration, true, true);
         }
 
-        private Item AttachedItem
+        public Item AttachedItem
         {
             get
             {
