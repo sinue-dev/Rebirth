@@ -20,7 +20,7 @@ namespace Rebirth.Prototype
 
         void Start()
         {
-            bag = GameManager.singleton.Hud.Bag;
+            bag = GameManager.singleton.LocalPlayer.Bag;
         }
 
         void Update()

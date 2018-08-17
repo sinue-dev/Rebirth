@@ -21,4 +21,4 @@ MonoBehaviour:
   RightHandPosition: {x: 0, y: 0, z: 0}
   RightHandRotation: {x: 90, y: 0, z: 0}
   DropRotation: {x: 0, y: 0, z: 0}
-  weapon: 1
+  weapon: 3

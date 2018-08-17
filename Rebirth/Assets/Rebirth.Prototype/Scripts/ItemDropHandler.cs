@@ -11,7 +11,7 @@ namespace Rebirth.Prototype
 
         void Start()
         {
-            bag = GameManager.singleton.Hud.Bag;
+            bag = GameManager.singleton.LocalPlayer.Bag;
         }
 
         public void OnDrop(PointerEventData eventData)

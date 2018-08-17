@@ -70,7 +70,7 @@ namespace Rebirth.Prototype
             if (!m_cursorIsLocked)
                 return;
 
-            var controlRotation = PlayerInput.GetMouseRotationInput();
+            var controlRotation = InputManager.GetMouseRotationInput();
             this.UpdateRotation(controlRotation);
 
         }

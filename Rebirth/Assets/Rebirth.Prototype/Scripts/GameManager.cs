@@ -26,7 +26,7 @@ namespace Rebirth.Prototype
 
             // Dont destroy on reloading the scene
             DontDestroyOnLoad(gameObject);
-        }
+		}
 
         public void Init(Scene currentScene)
         {
@@ -80,51 +80,9 @@ namespace Rebirth.Prototype
         public GameObject PrefabPlayer;
         public GameObject[] SpawnPoints;
 
-        public InputManager IM = new InputManager();
+        
         public RebirthPlayerController LocalPlayer;
         public Camera WorldCamera;
-        public HUD Hud;
-
-        public class InputManager
-        {
-            public InputManager()
-            {
-                keyJump = KeyCode.Space;
-                keyInteract = KeyCode.E;
-            }
-
-            public bool Jump()
-            {
-                return Input.GetKey(keyJump);
-            }
-
-			public float MoveHorizontal()
-			{
-				return Input.GetAxis("Horizontal");
-			}
-
-			public float MoveVertical()
-			{
-				return Input.GetAxis("Vertical");
-			}
-
-			public bool AttackLeft()
-			{
-				return Input.GetMouseButtonDown(0);
-			}
-
-			public bool AttackRight()
-			{
-				return Input.GetMouseButtonDown(1);
-			}
-
-            public bool Interact()
-            {
-                return Input.GetKey(keyInteract);
-            }
-
-            public KeyCode keyJump { get; set; }
-            public KeyCode keyInteract { get; set; }
-        }
+        public HUD Hud;		
     }
 }

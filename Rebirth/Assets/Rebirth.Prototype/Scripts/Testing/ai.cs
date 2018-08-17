@@ -7,7 +7,6 @@ namespace Rebirth.Prototype
 	[RequireComponent(typeof(Rigidbody))]
 	public class ai : MonoBehaviour
 	{
-
 		public float targetDistance;
 		public float enemyLookDistance;
 		public float attackDistance;
@@ -23,8 +22,18 @@ namespace Rebirth.Prototype
 			rb = GetComponent<Rigidbody>();
 		}
 
+		private void Update()
+		{
+			if (target == null)
+			{
+				target = (GameManager.singleton.LocalPlayer == null) ? null : GameManager.singleton.LocalPlayer.transform;
+			}
+		}
+
 		void FixedUpdate()
 		{
+			if (target == null) return;
+
 			targetDistance = Vector3.Distance(target.position, transform.position);
 			if (targetDistance < enemyLookDistance)
 			{

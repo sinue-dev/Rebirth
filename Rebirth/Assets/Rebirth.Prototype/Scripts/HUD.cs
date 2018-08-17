@@ -12,8 +12,7 @@ namespace Rebirth.Prototype
         public GameObject UILogin;
         public UIActionPanel UIActionPanel;
         public UIBagPanel UIBagPanel;
-
-        public Bag Bag;
+		public UIContainerPanel UIContainerPanel;
 
         public GameObject MessagePanel;
 

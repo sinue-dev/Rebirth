@@ -118,13 +118,13 @@ namespace Rebirth.Prototype
 
 			if (!isDead)
 			{
-				if (character.InteractableItem != null && GM.IM.Interact())
+				if (character.InteractableItem != null && InputManager.singleton.Interact())
 				{
 					character.InteractableItem.OnInteract();
 
 					if (character.InteractableItem is Item)
 					{
-						GameManager.singleton.Hud.Bag.AddItem(character.InteractableItem as Item);
+						character.Bag.AddItem(character.InteractableItem as Item);
 						(character.InteractableItem as Item).OnPickup();
 					}
 
@@ -133,20 +133,27 @@ namespace Rebirth.Prototype
 					character.InteractableItem = null;
 				}
 
-				if (character.LeftHandItem != null && GM.IM.AttackLeft())
+				if (character.LeftHandItem != null && InputManager.singleton.LeftLightAttack())
 				{
 					if (!EventSystem.current.IsPointerOverGameObject())
 					{
 						character.LeftHandItem.OnAction();
 					}
 				}
-				if (character.RightHandItem != null && GM.IM.AttackRight())
+				if (character.RightHandItem != null && InputManager.singleton.RightLightAttack())
 				{
 					if (!EventSystem.current.IsPointerOverGameObject())
 					{
 						character.RightHandItem.OnAction();
 					}
 				}
+
+				if(InputManager.singleton.ToggleCombat())
+				{
+					if (character.LeftHandItem != null) StartCoroutine(_SwitchWeapon(character.LeftHandItem));
+					if (character.RightHandItem != null) StartCoroutine(_SwitchWeapon(character.RightHandItem));
+				}
+
 			}
 
 			Running();
@@ -184,12 +191,12 @@ namespace Rebirth.Prototype
 				}
 				else
 				{
-					if(character.LeftHandItem == null && GM.IM.AttackLeft())
+					if(character.LeftHandItem == null && InputManager.singleton.LeftLightAttack())
 					{
 						AttackLeftFist();
 					}
 
-					if(character.RightHandItem == null && GM.IM.AttackRight())
+					if(character.RightHandItem == null && InputManager.singleton.RightLightAttack())
 					{
 						AttackRightFist();
 					}
@@ -201,13 +208,13 @@ namespace Rebirth.Prototype
         {
 			if (!IsAttacking)
             {
-                if (IsArmed && character.LeftHandItem == weaponItem)
+                if (IsArmed && (int)((CItemWeapon)weaponItem.ItemInfo).weapon == character.Controller.LeftWeapon)
                 {
 					character.animator.SetTrigger("AttackLMB");
 					IsAttacking = true;
 
                     StartCoroutine(Attacking(anim.GetCurrentAnimatorStateInfo(0).length));
-                }
+				}
                 else if (IsArmed)
                 {
                     // In Kampf-Modus aber keine Waffe ausgerüstet = Faustkampf
@@ -220,7 +227,7 @@ namespace Rebirth.Prototype
 		{
 			if (!IsAttacking)
 			{
-				if (IsArmed && character.RightHandItem == weaponItem)
+				if (IsArmed && (int)((CItemWeapon)weaponItem.ItemInfo).weapon == character.Controller.RightWeapon)
 				{
 					character.animator.SetTrigger("AttackRMB");
 					IsAttacking = true;
@@ -263,8 +270,8 @@ namespace Rebirth.Prototype
         {
             if (!CanWalk()) return;
 
-            float x = GM.IM.MoveHorizontal(); // Seitwärts
-            float z = GM.IM.MoveVertical(); // Vorwärts
+            float x = InputManager.singleton.MoveHorizontal(); // Seitwärts
+            float z = InputManager.singleton.MoveVertical(); // Vorwärts
 
             //float speed = new Vector2(z, x).sqrMagnitude;
 
@@ -310,13 +317,17 @@ namespace Rebirth.Prototype
 
 		public IEnumerator _SheathWeapon(Weapon weaponItem)
 		{
+			anim.SetTrigger("SheathWeapon");
+			// Waffen müssen ausgerüstet sein und dürfen nicht erst hier ausgerüstet werden => für später
+			// Rundes Bag Menü wenn man B hält ploppt es auf und man kann was auswählen und dann geht es wieder zu
+			// 
 			switch (weaponItem.ItemInfo.HoldingHand)
 			{
 				case HoldingHands_e.ONE:
 
 					break;
 				case HoldingHands_e.LEFT:
-					character.SetItemActive(weaponItem, true, character.EntityLeftHand);
+					character.Bag.SetItemActive(weaponItem, true, character.EntityLeftHand);
 					character.LeftHandItem = weaponItem;
 					weaponItem.OnHoldLeft();
 					LeftWeapon = (int)((CItemWeapon)weaponItem.ItemInfo).weapon;
@@ -324,7 +335,7 @@ namespace Rebirth.Prototype
 					
 					break;
 				case HoldingHands_e.RIGHT:
-					character.SetItemActive(weaponItem, true, character.EntityRightHand);
+					character.Bag.SetItemActive(weaponItem, true, character.EntityRightHand);
 					character.RightHandItem = weaponItem;
 					weaponItem.OnHoldRight();
 					RightWeapon = (int)((CItemWeapon)weaponItem.ItemInfo).weapon;
@@ -336,27 +347,27 @@ namespace Rebirth.Prototype
 					break;
 			}
 
-			anim.SetTrigger("SwitchWeapon");
-
 			yield return null;
 		}
 
 		public IEnumerator _UnSheathWeapon(Weapon weaponItem)
 		{
+			anim.SetTrigger("UnSheathWeapon");
+
 			switch (weaponItem.ItemInfo.HoldingHand)
 			{
 				case HoldingHands_e.ONE:
 
 					break;
 				case HoldingHands_e.LEFT:
-					character.SetItemActive(weaponItem, false, character.EntityLeftHand);
+					character.Bag.SetItemActive(weaponItem, false, character.EntityLeftHand);
 					character.LeftHandItem = null;
 					LeftWeapon = 0; ;
-					IsArmed = false;
+					IsArmed = false	;
 
 					break;
 				case HoldingHands_e.RIGHT:					
-					character.SetItemActive(weaponItem, false, character.EntityRightHand);
+					character.Bag.SetItemActive(weaponItem, false, character.EntityRightHand);
 					character.RightHandItem = null;
 					RightWeapon = 0;
 					IsArmed = false;
@@ -366,8 +377,6 @@ namespace Rebirth.Prototype
 
 					break;
 			}
-
-			anim.SetTrigger("SwitchWeapon");
 
 			yield return null;
 		}

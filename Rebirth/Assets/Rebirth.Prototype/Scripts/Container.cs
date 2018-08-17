@@ -1,39 +1,55 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Rebirth.Prototype
 {
-	public class Bag : BaseContainer
+	public class Container : BaseContainer
 	{
-		UIBagPanel UIBagPanel;
-		RebirthPlayerController character;
+		public UIContainerPanel UIContainerPanel;
+		public List<Item> startingItems;
 
-		public void Start()
+		private void Start()
 		{
-			character = GetComponent<RebirthPlayerController>();
-			UIBagPanel = GameManager.singleton.Hud.UIBagPanel;
-			for (int i = 0; i < UIBagPanel.transform.childCount; i++)
+			ItemUsed += UIContainer_ItemUsed;
+			ItemAdded += UIContainer_ItemAdded;
+			ItemRemoved += UIContainer_ItemRemoved;
+		}
+
+		public void Init()
+		{
+			UIContainerPanel = GameManager.singleton.Hud.UIContainerPanel;
+			PopulateSlots();
+			PopulateItems(startingItems.ToArray());
+		}
+
+		public void PopulateSlots()
+		{
+			mSlots.Clear();
+
+			for (int i = 0; i < ContainerSlots; i++)
 			{
-				GameObject slot = UIBagPanel.transform.GetChild(i).gameObject;
+				GameObject slot = Instantiate(UIContainerPanel.emptySlot, UIContainerPanel.transform);
+				slot.name = "ContainerSlot_" + i;
+
 				BagSlot bagSlot = slot.AddComponent<BagSlot>();
 				bagSlot.InitSlot(i);
 				mSlots.Add(bagSlot);
 			}
-
-			ItemUsed += UIBag_ItemUsed;
-			ItemAdded += UIBag_ItemAdded;
-			ItemRemoved += UIBag_ItemRemoved;
 		}
 
-
-		// Add Left und Right Hand Container !
+		public void PopulateItems(Item[] items)
+		{
+			foreach (Item item in items)
+			{
+				AddItem(item);
+			}
+		}
 
 		#region Bag
 
-		private void UIBag_ItemUsed(object sender, BagEventArgs e)
+		private void UIContainer_ItemUsed(object sender, BagEventArgs e)
 		{
 			//        if (e.Item.ItemInfo.ItemType == ItemTypes_e.WEAPON)
 			//        {
@@ -53,10 +69,10 @@ namespace Rebirth.Prototype
 			//        }
 		}
 
-		private void UIBag_ItemAdded(object sender, BagEventArgs e)
+		private void UIContainer_ItemAdded(object sender, BagEventArgs e)
 		{
 			int index = -1;
-			foreach (Transform slot in UIBagPanel.transform)
+			foreach (Transform slot in UIContainerPanel.transform)
 			{
 				index++;
 
@@ -88,20 +104,10 @@ namespace Rebirth.Prototype
 			}
 		}
 
-		//private void Bag_ItemRemoved(object sender, BagEventArgs e)
-		//{
-		//    ItemBase item = e.Item;
-
-		//    GameObject goItem = (item as MonoBehaviour).gameObject;
-		//    goItem.SetActive(true);
-		//    goItem.transform.parent = null;
-
-		//}
-
-		private void UIBag_ItemRemoved(object sender, BagEventArgs e)
+		private void UIContainer_ItemRemoved(object sender, BagEventArgs e)
 		{
 			int index = -1;
-			foreach (Transform slot in UIBagPanel.transform)
+			foreach (Transform slot in UIContainerPanel.transform)
 			{
 				index++;
 
@@ -141,41 +147,6 @@ namespace Rebirth.Prototype
 				}
 
 			}
-		}
-		public void SetItemActive(Weapon item, bool active, GameObject Hand)
-		{
-			item.transform.parent = active ? Hand.transform : null;
-			item.Toggle(active);
-
-			//GameObject currentItem = (item as MonoBehaviour).gameObject;
-			//currentItem.SetActive(active);
-
-		}
-
-		private void DropItem(Item item)
-		{
-			// _animator.SetTrigger("tr_drop");
-
-			//GameObject goItem = (LeftHandItem as MonoBehaviour).gameObject;
-
-			//GameManager.singleton.Hud.Bag.RemoveItem(item);
-
-			//// Throw animation
-			//Rigidbody rbItem = goItem.AddComponent<Rigidbody>();
-			//if (rbItem != null)
-			//{
-			//    rbItem.AddForce(transform.forward * 2.0f, ForceMode.Impulse);
-
-			//    Invoke("DoDropItem", 0.25f);
-			//}
-		}
-
-		public void DoDropItem()
-		{
-			// Remove Rigidbody
-			Destroy((character.LeftHandItem as MonoBehaviour).GetComponent<Rigidbody>());
-
-			character.LeftHandItem = null;
 		}
 		#endregion
 	}
