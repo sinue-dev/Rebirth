@@ -325,6 +325,8 @@ namespace Rebirth.Prototype
 			{
 				case HoldingHands_e.ONE:
 
+
+
 					break;
 				case HoldingHands_e.LEFT:
 					character.Bag.SetItemActive(weaponItem, true, character.EntityLeftHand);
@@ -343,7 +345,13 @@ namespace Rebirth.Prototype
 
 					break;
 				case HoldingHands_e.BOTH:
-
+                    character.Bag.SetItemActive(weaponItem, true, character.EntityRightHand);
+                    character.LeftHandItem = weaponItem;
+                    character.RightHandItem = weaponItem;                    
+                    weaponItem.OnHoldRight();
+                    LeftWeapon = (int)((CItemWeapon)weaponItem.ItemInfo).weapon;
+                    RightWeapon = (int)((CItemWeapon)weaponItem.ItemInfo).weapon;
+                    IsArmed = true;
 					break;
 			}
 
@@ -362,19 +370,22 @@ namespace Rebirth.Prototype
 				case HoldingHands_e.LEFT:
 					character.Bag.SetItemActive(weaponItem, false, character.EntityLeftHand);
 					character.LeftHandItem = null;
-					LeftWeapon = 0; ;
-					IsArmed = false	;
-
+					LeftWeapon = 0;
+					IsArmed = false;
 					break;
 				case HoldingHands_e.RIGHT:					
 					character.Bag.SetItemActive(weaponItem, false, character.EntityRightHand);
 					character.RightHandItem = null;
 					RightWeapon = 0;
 					IsArmed = false;
-
 					break;
 				case HoldingHands_e.BOTH:
-
+                    character.Bag.SetItemActive(weaponItem, false, character.EntityRightHand);
+                    character.LeftHandItem = null;
+                    character.RightHandItem = null;
+                    LeftWeapon = 0;
+                    RightWeapon = 0;
+                    IsArmed = false;
 					break;
 			}
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Rebirth.Prototype
 {
-    public class Onehand_Axe : Weapon
+    public class Weapon_Onehand : Weapon
     {
 		public override void OnUse()
         {

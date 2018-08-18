@@ -84,6 +84,7 @@ namespace Rebirth.Prototype
 		}
 	}
 
+    [RequireComponent(typeof(SphereCollider))]
 	public class Weapon : Item
 	{
 		public Collider damageCol;
@@ -91,6 +92,8 @@ namespace Rebirth.Prototype
 		private void Start()
 		{
 			gameObject.name = ItemInfo.Name;
+            pickupCol = GetComponent<SphereCollider>();
+            damageCol = transform.GetChild(0).GetComponent<MeshCollider>();
 		}
 
 		public virtual void OnActivateWeaponDamage()
