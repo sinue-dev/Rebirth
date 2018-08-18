@@ -26,7 +26,7 @@ namespace Rebirth.Prototype
 
 		public void PopulateSlots()
 		{
-			mSlots.Clear();
+            if (mSlots.Count > 0) Dispose();            
 
 			for (int i = 0; i < ContainerSlots; i++)
 			{
@@ -47,9 +47,18 @@ namespace Rebirth.Prototype
 			}
 		}
 
-		#region Bag
+        public override void Dispose()
+        {
+            mSlots.Clear();
+            foreach (BagSlot slot in UIContainerPanel.GetComponentsInChildren<BagSlot>())
+            {
+                Destroy(slot.gameObject);
+            }
+        }
 
-		private void UIContainer_ItemUsed(object sender, BagEventArgs e)
+        #region Bag
+
+        private void UIContainer_ItemUsed(object sender, BagEventArgs e)
 		{
 			//        if (e.Item.ItemInfo.ItemType == ItemTypes_e.WEAPON)
 			//        {
@@ -72,13 +81,13 @@ namespace Rebirth.Prototype
 		private void UIContainer_ItemAdded(object sender, BagEventArgs e)
 		{
 			int index = -1;
-			foreach (Transform slot in UIContainerPanel.transform)
+            foreach (BagSlot slot in UIContainerPanel.GetComponentsInChildren<BagSlot>())
 			{
 				index++;
 
 				// Border... Image
-				Transform imageTransform = slot.GetChild(0).GetChild(0);
-				Transform textTransform = slot.GetChild(0).GetChild(1);
+				Transform imageTransform = slot.transform.GetChild(0).GetChild(0);
+				Transform textTransform = slot.transform.GetChild(0).GetChild(1);
 				Image image = imageTransform.GetComponent<Image>();
 				Text txtCount = textTransform.GetComponent<Text>();
 				ItemDragHandler itemDragHandler = imageTransform.GetComponent<ItemDragHandler>();

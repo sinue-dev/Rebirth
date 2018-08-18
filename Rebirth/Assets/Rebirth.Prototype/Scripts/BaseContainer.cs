@@ -102,6 +102,11 @@ namespace Rebirth.Prototype
 			}
 		}
 
+        public virtual void Dispose()
+        {
+
+        }
+
 
 	}
 }

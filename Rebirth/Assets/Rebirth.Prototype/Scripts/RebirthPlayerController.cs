@@ -65,7 +65,7 @@ namespace Rebirth.Prototype
 				if(InputManager.singleton.Interact())
 				{
 					Container container = hit.collider.gameObject.GetComponent<Container>();
-					container.Init();
+                    if (!GameManager.singleton.Hud.UIContainerPanel.State()) container.Init(); else container.Dispose();
 					GameManager.singleton.Hud.UIContainerPanel.Toggle();
 
 				}
