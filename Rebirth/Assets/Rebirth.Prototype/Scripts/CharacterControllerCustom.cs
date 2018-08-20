@@ -49,12 +49,23 @@ namespace Rebirth.Prototype
         const float WALK_SPEED = .5f;
         const float RUN_SPEED = 1f;
 
+		public float Gravity = 9.81f;
         public float MovementSpeed = 2f;
 	    public float TurnSpeed = 1f;
+		public float JumpTime = 2f;
+		public float FallingVelocity;
         float rotationSpeed = 40f;
 
 		public bool isDead = false;
 		public bool isBlocking = false;
+		public bool isGrounded = false;
+		public bool isFalling = false;
+
+		public int Jumping
+		{
+			get { return anim.GetInteger("Jumping"); }
+			set { anim.SetInteger("Jumping", value); }
+		}
 
         public bool IsWalking
         {
@@ -62,7 +73,13 @@ namespace Rebirth.Prototype
             set { anim.SetBool("IsWalking", value); }
         }
 
-        public bool IsRunning
+		public bool IsMoving
+		{
+			get { return anim.GetBool("IsMoving"); }
+			set { anim.SetBool("IsMoving", value); }
+		}
+
+		public bool IsRunning
         {
             get { return anim.GetBool("IsRunning"); }
             set { anim.SetBool("IsRunning", value); }
@@ -74,7 +91,13 @@ namespace Rebirth.Prototype
             set { anim.SetBool("IsArmed", value); }
         }
 
-        public bool IsAttacking
+		public bool IsCombat
+		{
+			get { return anim.GetBool("IsCombat"); }
+			set { anim.SetBool("IsCombat", value); }
+		}
+
+		public bool IsAttacking
         {
             get { return anim.GetBool("IsAttacking"); }
             set { anim.SetBool("IsAttacking", value); }
@@ -102,6 +125,11 @@ namespace Rebirth.Prototype
 		{
 			get { return anim.GetInteger("RightWeapon"); }
 			set { anim.SetInteger("RightWeapon", value); }
+		}
+
+		public void Trigger(string name)
+		{
+			anim.SetTrigger(name);
 		}
 
 		void Start()
@@ -150,16 +178,85 @@ namespace Rebirth.Prototype
 
 				if(InputManager.singleton.ToggleCombat())
 				{
-					if (character.LeftHandItem != null) StartCoroutine(_SwitchWeapon(character.LeftHandItem));
-					if (character.RightHandItem != null) StartCoroutine(_SwitchWeapon(character.RightHandItem));
+					IsCombat = !IsCombat;
+
+					if (IsArmed)
+					{
+						if (character.LeftHandItem != null) StartCoroutine(_SwitchWeapon(character.LeftHandItem));
+						if (character.RightHandItem != null) StartCoroutine(_SwitchWeapon(character.RightHandItem));
+					}
 				}
 
+
+				//if (Input.GetButtonDown("Dash"))
+				//{
+				//	Vector3 dashVelocity = Vector3.Scale(transform.forward, DashDistance * new Vector3((Mathf.Log(1f / (Time.deltaTime * _body.drag + 1)) / -Time.deltaTime), 0, (Mathf.Log(1f / (Time.deltaTime * _body.drag + 1)) / -Time.deltaTime)));
+				//	_body.AddForce(dashVelocity, ForceMode.VelocityChange);
+				//}
+
+				if (InputManager.singleton.Jump() && Jumping == 0)
+				{
+					if (isGrounded)
+					{						
+						StartCoroutine(_Jump());
+						//character.rb.AddForce(transform.up * Mathf.Sqrt(2f * -2f * Physics.gravity.y), ForceMode.VelocityChange); // 
+					}
+					else
+					{
+						if(isFalling)
+						{
+							Jumping = 2;
+						}
+					}
+				}
+
+				if (InputManager.singleton.Dodge())
+				{
+					if (!IsMoving)
+						Trigger("RollForwardT");
+					else
+					{
+						if (InputManager.singleton.MoveLeft())
+							Trigger("RollLeftT");
+						else if (InputManager.singleton.MoveRight())
+							Trigger("RollRightT");
+						else if (InputManager.singleton.MoveForward())
+							Trigger("RollForwardT");
+						else if (InputManager.singleton.MoveBackward())
+							Trigger("RollBackwardT");
+						else
+							Trigger("RollForwardT");
+					}
+				}
 			}
 
 			Running();
         }
 
-        public virtual void FixedUpdateClient()
+		IEnumerator _Jump()
+		{
+			Jumping = 1;
+			Trigger("JumpT");
+
+			character.rb.velocity = Vector3.zero;
+			float timer = 0;
+
+			while (InputManager.singleton.Jump() && timer < JumpTime)
+			{
+				float proportionCompleted = timer / JumpTime;
+				Vector3 thisFrameJumpVector = Vector3.Lerp(transform.up * Mathf.Sqrt(2f * -2f * Physics.gravity.y), Vector3.zero, proportionCompleted);
+				character.rb.AddForce(thisFrameJumpVector);
+				timer += Time.deltaTime;
+				yield return null;
+			}
+
+			if (true) // IsGrounded
+				Jumping = 0;
+			else
+				Jumping = 2; // Falling
+		}
+
+		public virtual void FixedUpdateClient()
         {
 			if (!isDead)
 			{
@@ -167,15 +264,35 @@ namespace Rebirth.Prototype
 				{
 					//DropItem();
 				}
-			}
 
-			Move();
-        }
+				Move();
+			}
+		}
 
         public virtual void LatedUpdateClient()
         {
 
         }
+
+		void CheckForGrounded()
+		{
+			float distanceToGround;
+			float threshold = .45f;
+			RaycastHit hit;
+			Vector3 offset = new Vector3(0, .4f, 0);
+			if (Physics.Raycast((transform.position + offset), -Vector3.up, out hit, 100f))
+			{
+				distanceToGround = hit.distance;
+				if (distanceToGround < threshold)
+				{
+					isGrounded = true;
+				}
+				else
+				{
+					isGrounded = false;
+				}
+			}
+		}
 
 		public void Attack(Weapon weapon)
 		{
@@ -275,14 +392,14 @@ namespace Rebirth.Prototype
 
             //float speed = new Vector2(z, x).sqrMagnitude;
 
-            IsWalking = (z != 0 || x != 0);
+            IsMoving = (z != 0 || x != 0);
 
-            if (IsWalking && IsRunning)
+            if (IsMoving && IsRunning)
             {
                 MoveZ = Mathf.Clamp(z, -RUN_SPEED, RUN_SPEED);
                 MoveX = Mathf.Clamp(x, -RUN_SPEED, RUN_SPEED);
             }
-            else if (IsWalking && !IsRunning)
+            else if (IsMoving && !IsRunning)
             {
                 MoveZ = Mathf.Clamp(z, -WALK_SPEED, WALK_SPEED);
                 MoveX = Mathf.Clamp(x, -WALK_SPEED, WALK_SPEED);
@@ -291,11 +408,13 @@ namespace Rebirth.Prototype
             {
                 MoveZ = z;
                 MoveX = x;
-            }
+            }			
 
-            Vector3 movement = (MoveX * transform.right * MovementSpeed * Time.deltaTime) + (MoveZ * transform.forward * MovementSpeed * Time.deltaTime); 
-            character.rb.MovePosition(character.rb.position + movement);
-        }
+			Vector3 movement = (MoveX * transform.right * MovementSpeed * Time.fixedDeltaTime) + (MoveZ * transform.forward * MovementSpeed * Time.fixedDeltaTime);
+			character.rb.MovePosition(character.rb.position + movement);
+
+			
+		}
 
         public void RotatePlayerToCameraDir(Quaternion dir)
         {

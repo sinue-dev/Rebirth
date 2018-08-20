@@ -141,6 +141,26 @@ public class InputManager : MonoBehaviour
 		return Input.GetAxis("Horizontal");
 	}
 
+	public bool MoveForward()
+	{
+		return Input.GetKey(KeyCode.W);
+	}
+
+	public bool MoveBackward()
+	{
+		return Input.GetKey(KeyCode.S);
+	}
+
+	public bool MoveLeft()
+	{
+		return Input.GetKey(KeyCode.A);
+	}
+
+	public bool MoveRight()
+	{
+		return Input.GetKey(KeyCode.D);
+	}
+
 	public float MoveVertical()
 	{
 		return Input.GetAxis("Vertical");
@@ -195,7 +215,7 @@ public class InputManager : MonoBehaviour
 
 	public bool Jump()
 	{
-		return Input.GetKeyDown(keyJump);
+		return Input.GetKey(keyJump);
 	}
 
 	public bool Dodge()
