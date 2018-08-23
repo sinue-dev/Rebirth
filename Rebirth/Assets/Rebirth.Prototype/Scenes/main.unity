@@ -2559,7 +2559,6 @@ MonoBehaviour:
   UIActionPanel: {fileID: 619273726}
   UIBagPanel: {fileID: 307898043}
   UIContainerPanel: {fileID: 2106846406}
-  Bag: {fileID: 0}
   MessagePanel: {fileID: 976191615}
 --- !u!1 &444524459
 GameObject:

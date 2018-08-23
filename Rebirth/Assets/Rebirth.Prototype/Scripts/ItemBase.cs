@@ -6,6 +6,8 @@ namespace Rebirth.Prototype
 {
 	public class InteractableItem : MonoBehaviour
     {
+		public CItem ItemInfo;
+
 		public BagSlot Slot
 		{
 			get; set;
@@ -34,31 +36,6 @@ namespace Rebirth.Prototype
 
 		}
 
-		public void Show()
-        {
-            gameObject.SetActive(true);
-        }
-
-        public void Hide()
-        {
-            gameObject.SetActive(false);
-        }
-
-        public void Toggle(bool state)
-        {
-            gameObject.SetActive(state);
-        }
-
-        public bool State()
-        {
-            return gameObject.activeSelf;
-        }
-    }
-
-	public class Item : InteractableItem
-	{
-		public CItem ItemInfo;
-
 		public virtual void OnHoldLeft()
 		{
 			transform.localPosition = ItemInfo.LeftHandPosition;
@@ -82,9 +59,28 @@ namespace Rebirth.Prototype
 				gameObject.transform.eulerAngles = ItemInfo.DropRotation;
 			}
 		}
-	}
 
-    [RequireComponent(typeof(SphereCollider))]
+		public void Show()
+        {
+            gameObject.SetActive(true);
+        }
+
+        public void Hide()
+        {
+            gameObject.SetActive(false);
+        }
+
+        public void Toggle(bool state)
+        {
+            gameObject.SetActive(state);
+        }
+
+        public bool State()
+        {
+            return gameObject.activeSelf;
+        }
+    }
+		
 	public class Weapon : Item
 	{
 		public Collider damageCol;

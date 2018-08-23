@@ -60,23 +60,30 @@ namespace Rebirth.Prototype
 
 			RaycastHit hit;
 			int rayLength = 10;
-			if (Physics.Raycast(EntityHead.transform.position, GameManager.singleton.WorldCamera.transform.GetComponent<CameraController>().AimVector * rayLength, out hit, rayLength) && (hit.collider.gameObject.GetComponent<Container>() != null))
+			if (Physics.Raycast(EntityHead.transform.position, GameManager.singleton.WorldCamera.transform.GetComponent<CameraController>().AimVector * rayLength, out hit, rayLength) && (hit.collider.gameObject != null))
 			{
-				if(InputManager.singleton.Interact())
+				// Interact with Container
+				if (hit.collider.GetComponent<Container>())
 				{
-					Container container = hit.collider.gameObject.GetComponent<Container>();
-                    if (!GameManager.singleton.Hud.UIContainerPanel.State()) container.Init(); else container.Dispose();
-					GameManager.singleton.Hud.UIContainerPanel.Toggle();
+					if (InputManager.singleton.Interact())
+					{
+						Container container = hit.collider.gameObject.GetComponent<Container>();
+						if (!GameManager.singleton.Hud.UIContainerPanel.State()) container.Init(); else container.Dispose();
+						GameManager.singleton.Hud.UIContainerPanel.Toggle();
 
+					}
 				}
-
-				// Harvestable harvestable = hit.collider.gameObject.GetComponent<Harvestable>();
-				//if (harvestable == null) return;
-
-				//if (Input.GetKeyUp(KeyCode.E) && !harvestable.bIsHarvesting)
-				//{
-				//    HarvestResources(harvestable);
-				//}
+				
+				// Interact with Harvestable Object (Tree, Rock, Bush, etc.)
+				if(hit.collider.GetComponent<Harvestable>())
+				{
+					if(InputManager.singleton.Interact())
+					{
+						Harvestable harvestable = hit.collider.gameObject.GetComponent<Harvestable>();
+						
+					}
+				}
+				
 			}
 		}
 
